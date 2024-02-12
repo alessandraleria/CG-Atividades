@@ -1,6 +1,6 @@
 # Atividade 1
 
-## Este é um projeto simples em TypeScript que utiliza a biblioteca canvas para gerar imagens PPM e PNG de gradientes, círculos e quadrados. O código está estruturado em classes e possui uma configuração mínima para execução.
+### Este é um projeto simples em TypeScript que utiliza a biblioteca canvas para gerar imagens PPM e PNG de gradientes, círculos e quadrados. O código está estruturado em classes e possui uma configuração mínima para execução.
 
 ### Pré-requisitos
 
