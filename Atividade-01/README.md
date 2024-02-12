@@ -28,4 +28,4 @@ Este comando irá transpilar o código TypeScript para JavaScript, e em seguida,
 
 ### Detalhes Técnicos
 
-O projeto utiliza a biblioteca canvas para criar e manipular imagens. As imagens são geradas em formato PPM (Portable Pixmap) e posteriormente convertidas para PNG utilizando a biblioteca fs para manipulação de arquivos e imagemagick para a conversão.
+O projeto utiliza a biblioteca canvas para criar e manipular imagens. As imagens são geradas em formato PPM (Portable Pixmap) e salvos como PNG diretamente utilizando a biblioteca fs para manipulação de arquivos.
