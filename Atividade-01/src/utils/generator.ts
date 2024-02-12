@@ -1,5 +1,3 @@
-// src/utils/GenerateImage.ts
-
 import { createCanvas, Canvas } from 'canvas';
 import fs from 'fs';
 

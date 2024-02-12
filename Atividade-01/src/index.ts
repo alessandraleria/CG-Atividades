@@ -1,4 +1,3 @@
-// src/index.ts
 import ImageGenerator from './utils/generator';
 
 function main() {
