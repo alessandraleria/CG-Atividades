@@ -6,7 +6,7 @@ export class Mat3 extends MatUtils {
         e10: number, e11: number, e12: number,
         e20: number, e21: number, e22: number
     ) {
-        super(e00, e01, e02, e10, e11, e12, e20, e21, e22);
+        super(3, 3, e00, e01, e02, e10, e11, e12, e20, e21, e22);
     }
   
     add(m: Mat3): Mat3 {

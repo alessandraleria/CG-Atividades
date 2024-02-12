@@ -2,7 +2,7 @@ import { MatUtils } from "./mat_utils";
 
 export class Mat2 extends MatUtils {
   constructor(e00: number, e01: number, e10: number, e11: number) {
-    super(e00, e01, e10, e11);
+    super(2, 2, e00, e01, e10, e11);
   }
 
   add(m: Mat2): Mat2 {
