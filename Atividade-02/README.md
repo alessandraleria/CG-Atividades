@@ -16,7 +16,7 @@ $ npm install
 
 # Para gerar a imagem gradiente a partir de vec3, utilize o comando:
 
-$ npm run start
+$ npm start
 
 # Para rodar os tests, rode o comando:
 

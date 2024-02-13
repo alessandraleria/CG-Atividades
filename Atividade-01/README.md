@@ -16,7 +16,7 @@ $ npm install
 
 # Para gerar as imagens, utilize o seguinte comando:
 
-$ npm run start
+$ npm start
 ```
 
 Este comando irá transpilar o código TypeScript para JavaScript, e em seguida, executar o script principal (src/index.ts). As imagens serão geradas e salvas na pasta src/out.
