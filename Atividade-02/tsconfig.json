@@ -26,9 +26,5 @@
     "outDir": "dist",
     "typeRoots": ["./node_modules/@types"],
   },
-  "typedocOptions": {
-    "entryPoints": ["src/index.ts"],
-    "out": "docs"
-  },
   "include": ["src/**/*.ts"]
 }
