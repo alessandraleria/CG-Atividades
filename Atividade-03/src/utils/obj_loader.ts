@@ -129,7 +129,7 @@ export class ObjLoader {
     this.result.models.push(model);
   }
 
-  private parseGroup(params: string[]): void {
+  protected parseGroup(params: string[]): void {
     if (params.length !== 1) {
       throw new Error('Group statements must have exactly 1 argument (eg. g group_1)');
     }
@@ -198,6 +198,15 @@ export class ObjLoader {
     }
 
     const currentModel = this.currentModel();
+
+    if (currentModel.faces.length === 0) {
+      currentModel.faces.push({
+        material: '',
+        group: '',
+        smoothingGroup: 0,
+        vertices: [],
+      });
+    }
 
     const face: Face = {
       material: currentModel.faces[0].material,
