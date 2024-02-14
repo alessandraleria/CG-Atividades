@@ -1,5 +1,6 @@
 import writeColor, { Color } from "../Color";
 import HittableSphere from "../hittable/hittable_sphere";
+import HittableTriangle from "../hittable/hittable_triangle";
 import { RayT } from "../ray";
 import { Vec3, unit } from "../vec/vec_3";
 
@@ -19,6 +20,7 @@ function rayColor(r: RayT, frameNumber: number): Color {
   const marsOrbitRadius = 6;
   const jupiterOrbitRadius = 8;
   const moonOrbitRadius = 1.5;
+  const starOrbitRadius = 11;
 
   const mercuryOrbitAngle = (frameNumber / 88) * Math.PI * 2;
   const venusOrbitAngle = (frameNumber / 225) * Math.PI * 2;
@@ -26,6 +28,7 @@ function rayColor(r: RayT, frameNumber: number): Color {
   const marsOrbitAngle = (frameNumber / 687) * Math.PI * 2;
   const jupiterOrbitAngle = (frameNumber / 4333) * Math.PI * 2;
   const moonOrbitAngle = (frameNumber / 30) * Math.PI * 2;
+  const startOrbitAngle = (frameNumber / 5000) * Math.PI * 2;
 
   // Crie os centros dos planetas
   const createPlanetCenter = (sunCenter: Vec3, orbitRadius: number, orbitAngle: number) => {
@@ -41,6 +44,7 @@ function rayColor(r: RayT, frameNumber: number): Color {
   const earthCenter = createPlanetCenter(sunCenter, earthOrbitRadius, earthOrbitAngle);
   const marsCenter = createPlanetCenter(sunCenter, marsOrbitRadius, marsOrbitAngle);
   const jupiterCenter = createPlanetCenter(sunCenter, jupiterOrbitRadius, jupiterOrbitAngle);
+  const starCenter = createPlanetCenter(sunCenter, starOrbitRadius, startOrbitAngle);
 
   const moonCenter = new Vec3(
     earthCenter.x + Math.cos(moonOrbitAngle) * moonOrbitRadius,
@@ -57,7 +61,23 @@ function rayColor(r: RayT, frameNumber: number): Color {
   const jupiter = new HittableSphere(jupiterCenter, jupiterRadius, new Vec3(0.6, 0.4, 0.2));
   const moon = new HittableSphere(moonCenter, moonRadius, new Vec3(0.7, 0.7, 0.7));
 
-  const celestialBodies = [sun, mercury, venus, earth, mars, jupiter, moon];
+  // Crie os vértices da estrela
+  const v0 = starCenter.add(new Vec3(-0.5, -0.5, -0.5));
+  const v1 = starCenter.add(new Vec3(0.5, -0.5, -0.5));
+  const v2 = starCenter.add(new Vec3(0, 0.5, 0));
+  const v3 = starCenter.add(new Vec3(0, -0.5, 0.5));
+  
+    // Crie os triângulos da estrela
+  const t0 = new HittableTriangle(v0, v1, v2, new Vec3(1, 1, 0));
+  const t1 = new HittableTriangle(v0, v1, v3, new Vec3(1, 1, 0));
+  const t2 = new HittableTriangle(v1, v2, v3, new Vec3(1, 1, 0));
+  const t3 = new HittableTriangle(v2, v0, v3, new Vec3(1, 1, 0));
+
+
+
+
+// Adicione os triângulos à lista de corpos celestes
+const celestialBodies = [sun, mercury, venus, earth, mars, jupiter, moon, t0, t1, t2, t3];
 
   let closestHit = null;
   let closestHitDistance = Infinity;
@@ -86,13 +106,13 @@ function rayColor(r: RayT, frameNumber: number): Color {
 
 export default function drawPlanet(frameNumber: number): string {
   const aspectRatio: number = 16.0 / 9.0;
-  const imageWidth: number = 200;
+  const imageWidth: number = 800;
   let imageHeight: number = Math.max(1, Math.floor(imageWidth / aspectRatio / 2) * 2); // Garante que seja divisível por 2
 
   const focalLength: number = 1.0;
   const viewportHeight: number = 2.0;
   const viewportWidth: number = viewportHeight * (imageWidth / imageHeight);
-  const cameraCenter: Vec3 = new Vec3(0, 2, 2);
+  const cameraCenter: Vec3 = new Vec3(0, 2, 5);
 
   const viewportU: Vec3 = new Vec3(viewportWidth, 0.2, -1);
   const viewportV: Vec3 = new Vec3(0, -viewportHeight, 0);

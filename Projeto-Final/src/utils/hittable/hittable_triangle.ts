@@ -1,4 +1,4 @@
-import { Vec3, dot, cross } from "../vec/vec_3";
+import { Vec3, dot, cross, unit } from "../vec/vec_3";
 import Hittable from "./hittable";
 import { RayT } from "../ray";
 
@@ -6,53 +6,79 @@ export default class HittableTriangle extends Hittable {
   public v0: Vec3;
   public v1: Vec3;
   public v2: Vec3;
+  public color: Vec3;
+  public refractiveIndex: number;
+  public isReflective: boolean;
 
-  constructor(v0: Vec3, v1: Vec3, v2: Vec3) {
+  constructor(v0: Vec3, v1: Vec3, v2: Vec3, color: Vec3, refractiveIndex: number = 1.0, isReflective = false) {
     super();
     this.v0 = v0;
     this.v1 = v1;
     this.v2 = v2;
+    this.color = color;
+    this.refractiveIndex = refractiveIndex;
+    this.isReflective = isReflective;
   }
 
-  hit(r: RayT): boolean {
+  getNormal(): Vec3 {
+    const e1: Vec3 = this.v1.sub(this.v0);
+    const e2: Vec3 = this.v2.sub(this.v0);
+  
+    const normal: Vec3 = cross(e1, e2);
+    
+    return unit(normal);
+  }
+
+  getPoint(u: number, v: number): Vec3 {
+    const w: number = 1 - u - v;
+    const x: number = w * this.v0.x + u * this.v1.x + v * this.v2.x;
+    const y: number = w * this.v0.y + u * this.v1.y + v * this.v2.y;
+    const z: number = w * this.v0.z + u * this.v1.z + v * this.v2.z;
+
+    return new Vec3(x, y, z);
+  }
+
+  getIsReflective(): boolean {
+    return this.isReflective;
+  }
+
+  reflect(vector: Vec3, normal: Vec3): Vec3 {
+    return vector.sub(normal.scale(2 * dot(vector, normal)));
+  }
+
+  hit(r: RayT): number | null {
     const v0_v1: Vec3 = this.v1.sub(this.v0);
     const v0_v2: Vec3 = this.v2.sub(this.v0);
-    const vNormal: Vec3 = cross(v0_v1, v0_v2);
-    
-    const v0_origin: Vec3 = this.v0.sub(r.origin);
-    const trianglePlan: number = dot(v0_origin, vNormal) / dot(r.direction, vNormal);
-
-    if (trianglePlan < 0) { 
-      return false;
+    const pvec: Vec3 = cross(r.direction, v0_v2);
+    const det: number = dot(v0_v1, pvec);
+  
+    // Se o determinante é próximo de zero, o raio está no plano do triângulo
+    if (Math.abs(det) < 1e-8) {
+      return null;
     }
-
-    const intersecPoint: Vec3 = r.at(trianglePlan);
-
-    const v0_intersecPoint: Vec3 = intersecPoint.sub(this.v0);
-    const crossProd_v0_v1: Vec3 = cross(v0_v1, v0_intersecPoint);
-
-    if (dot(vNormal, crossProd_v0_v1) < 0) {
-      return false;
+  
+    const invDet: number = 1 / det;
+    const tvec: Vec3 = r.origin.sub(this.v0);
+    const u: number = dot(tvec, pvec) * invDet;
+  
+    if (u < 0 || u > 1) {
+      return null;
     }
-
-    const v1_v2: Vec3 = this.v2.sub(this.v1);
-    const v1_intersecPoint: Vec3 = intersecPoint.sub(this.v1);
-    const crossProd_v1_v2: Vec3 = cross(v1_v2, v1_intersecPoint);
-
-    if (dot(vNormal, crossProd_v1_v2) < 0) {
-      return false;
-    } 
-
-    const v2_v0: Vec3 = this.v0.sub(this.v2);
-    const v2_intersecPoint: Vec3 = intersecPoint.sub(this.v2);
-    const crossProd_v2_v0: Vec3 = cross(v2_v0, v2_intersecPoint);
-
-    if (dot(vNormal, crossProd_v2_v0) < 0) {
-      return false;
+  
+    const qvec: Vec3 = cross(tvec, v0_v1);
+    const v: number = dot(r.direction, qvec) * invDet;
+  
+    if (v < 0 || u + v > 1) {
+      return null;
     }
-
-    return true;
-
+  
+    const t: number = dot(v0_v2, qvec) * invDet;
+  
+    return t >= 0 ? t : null;
   }
+
+  getColor(): Vec3 { // Adicione este método para obter a cor
+    return this.color;
+  } 
 
 }
