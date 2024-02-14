@@ -24,8 +24,10 @@ $ npm test
 
 O arquivo gerado serão salvos na pasta out.
 
-# Obs: Caso nãtenha uma pasta out/frames e out/video no diretorio src, essas pastas devem ser criadas para o funcionamento do projeto.
+# Obs: Caso não tenha uma pasta out/frames e out/video no diretorio src, essas pastas devem ser criadas para o funcionamento do projeto.
 
 Alessandra Leria - 760884
+
 Larissa Martins - 769300
+
 Nathalie Komatsu - 771055
